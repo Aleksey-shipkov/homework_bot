@@ -86,7 +86,7 @@ def check_response(response):
     if response['homeworks'] == []:
         logger.debug('Новые статусы отсутствуют')
     try:
-        homework = response.get('homeworks')       
+        homework = response.get('homeworks')
     except KeyError as error:
         logger.error(f'{error}: невозможно получить необходимое содержимое')
         raise KeyError(f'{error}: невозможно получить необходимое содержимое')
