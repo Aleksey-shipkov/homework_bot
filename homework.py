@@ -20,8 +20,8 @@ PRACTICUM_TOKEN = os.getenv('PRACTICUM_TOKEN')
 TELEGRAM_TOKEN = os.getenv('TELEGRAM_TOKEN')
 TELEGRAM_CHAT_ID = os.getenv('TELEGRAM_CHAT_ID')
 
-RETRY_TIME = 600
-ENDPOINT = 'https://practicum.yandex.ru/api/user_api/homework_statuses/'
+RETRY_TIME = 2
+ENDPOINT = 'https://practicum.yandex.ru/api/user_api/homework_statuses/1111'
 HEADERS = {'Authorization': f'OAuth {PRACTICUM_TOKEN}'}
 
 
@@ -83,9 +83,10 @@ def check_response(response):
     if not isinstance(response['homeworks'], list):
         logger.error('Произошла ошибка. Ответ не является списком')
         raise TypeError('Произошла ошибка. Ответ не является списком')
+    if response['homeworks'] == []:
+        logger.debug('Новые статусы отсутствуют')
     try:
-        homework = response.get('homeworks')
-        return homework
+        homework = response.get('homeworks')       
     except KeyError as error:
         logger.error(f'{error}: невозможно получить необходимое содержимое')
         raise KeyError(f'{error}: невозможно получить необходимое содержимое')
@@ -96,6 +97,7 @@ def check_response(response):
     except Exception as error:
         logger.error(f'Произошла{error}', exc_info=True)
         raise Exception(f'Произошла{error}')
+    return homework
 
 
 def parse_status(homework):
@@ -151,8 +153,8 @@ def main():
 
         except Exception as error:
             message = f'Сбой в работе программы: {error}'
-            if error not in message_list:
-                message_list.append(error)
+            if message not in message_list:
+                message_list.append(message)
                 bot = Bot(token=TELEGRAM_TOKEN)
                 send_message(bot, message)
             time.sleep(RETRY_TIME)
