@@ -142,7 +142,6 @@ def main() -> None:
     if not check_tokens():
         raise SystemExit
     bot = Bot(token=TELEGRAM_TOKEN)
-
     current_timestamp = int(time.time())
     print(type(current_timestamp))
     while True:
