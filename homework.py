@@ -157,10 +157,10 @@ def main() -> None:
                 send_message(bot, message)
             current_timestamp = int(time.time())
         except Exception as error:
+            logger.error(f'{error}')
             message = f'Сбой в работе программы: {error}'
             if message not in message_list:
                 message_list.append(message)
-                bot = Bot(token=TELEGRAM_TOKEN)
                 send_message(bot, message)
         finally:
             time.sleep(RETRY_TIME)
